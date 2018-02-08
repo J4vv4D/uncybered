@@ -1,0 +1,39 @@
+{
+  "name": "uncybered",
+  "version": "0.2.0",
+  "description": "Taking the FUD out of IT Security. A Chrome extension that replaces cybery words.",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha --compilers js:babel-core/register --require babel-polyfill test/**/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/J4vv4D/uncybered.git"
+  },
+  "keywords": [
+    "cyber",
+    "FUD",
+    "switch",
+    "words",
+    "replace",
+    "Chrome",
+    "extension"
+  ],
+  "author": "@J4vv4d",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/J4vv4D/uncybered/issues"
+  },
+  "homepage": "https://github.com/J4vv4D/uncybered#readme",
+  "devDependencies": {
+    "babel-core": "^6.0.20",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.0.15",
+    "babel-preset-stage-0": "^6.0.15",
+    "chai": "^4.1.2",
+    "jsdom": "^11.6.2",
+    "mocha": "^5.0.0"
+  }
+}

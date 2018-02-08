@@ -27,19 +27,19 @@ let sourceRegexToTargetWords;
 
 function makeRegex(sourceWords) {
     return new RegExp('\\b' + sourceWords.join('\\b|\\b') + '\\b', 'gi');
-};
+}
 
 function identity(string) {
     return string;
-};
+}
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
-};
+}
 
 function toUpperCase(string) {
     return string.toUpperCase();
-};
+}
 
 function makeRegexToTargetWords(sourceWordsToTargetWords, modifyWords) {
     return sourceWordsToTargetWords.map(sourceAndTarget => {
@@ -48,15 +48,15 @@ function makeRegexToTargetWords(sourceWordsToTargetWords, modifyWords) {
         target = modifyWords(target);
         return [makeRegex(source), target];
     });
-};
+}
 
-function replaceTextWithRegexes(text, sourceRegexToTargetWords) {
+function replaceTextWithRegexes(text) {
     for (let k = 0; k < sourceRegexToTargetWords.length; k++) {
         let [regex, targetWord] = sourceRegexToTargetWords[k];
         text = text.replace(regex, targetWord)
     }
     return text;
-};
+}
 
 /**
  * Prints text to the console when a debugging flag is true.
@@ -72,21 +72,22 @@ function debuglog(textToLog) {
 
 /**
  * replace the given element's nonsensical text with a more understandable text from the mapping
- * @param {HTMLElement} element - the element which contains text that will potentially be replaced
+ * @param {node} element - the element which contains text that will potentially be replaced
+ * @param {Document} aDocument - aDocument is used to create a DOM text node. This parameter is solely used for unit
+ *         test purposes in order to remove the dependency to a browser
  *
  * @return {void}
  */
-function uncyberElementIfNecessary(element) {
+export function uncyberElementIfNecessary(element, aDocument) {
     for (let j = 0; j < element.childNodes.length; j++) {
         const node = element.childNodes[j];
 
         if (node.nodeType === DOM_NODE_TYPE_TEXT) {
             const text = node.nodeValue;
-            let replacedText = replaceTextWithRegexes(text, sourceRegexToTargetWords);
+            let replacedText = replaceTextWithRegexes(text);
 
             if (replacedText !== text) {
-                debuglog('replaced ' + text + ' with ' + replacedText);
-                element.replaceChild(document.createTextNode(replacedText), node);
+                element.replaceChild(aDocument.createTextNode(replacedText), node);
             }
         }
     }
@@ -97,10 +98,8 @@ function uncyberElementIfNecessary(element) {
  * performance implications of regexp compilation.
  *
  * Side effect: the global variable <tt>sourceRegexToTargetWords</tt> is set.
- *
- * @return {void}
  */
-function initializeRegexToTargetWords() {
+export function initializeRegexToTargetWords() {
     sourceRegexToTargetWords = makeRegexToTargetWords(sourceWordsToTargetWords, identity)
         .concat(makeRegexToTargetWords(sourceWordsToTargetWords, capitalizeFirstLetter))
         .concat(makeRegexToTargetWords(sourceWordsToTargetWords, toUpperCase));
@@ -113,13 +112,18 @@ function initializeRegexToTargetWords() {
  * @return {void}
  */
 function runUncybered() {
-    initializeRegexToTargetWords();
+    // avoid errors in tests
+    const document = document || null;
+    if (!document) {
+        return;
+    }
 
     let elements = document.getElementsByTagName('*');
     elements = Array.prototype.slice.call(elements);
     elements.forEach(element => {
-        uncyberElementIfNecessary(element);
+        uncyberElementIfNecessary(element, document);
     });
 }
 
+initializeRegexToTargetWords();
 runUncybered();
