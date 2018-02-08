@@ -1,20 +1,20 @@
-var elements = document.getElementsByTagName('*');
+const elements = document.getElementsByTagName('*');
 
-var sourceWordsToTargetWords = [
+const sourceWordsToTargetWords = [
     [['machine learning', 'ml'], 'magic'],
     [['artificial intelligence', 'ai'], 'witchcraft'],
     [['gdpr', 'general data protection regulation'], 'the MacGuffin'],
     [['advanced'], 'basic'],
     [['internet of things', 'IoT'], 'cheap connected garbage'],
-		[['evangelist'], 'mouthpiece'],
-		[['evangelists'], 'mouthpieces'],
-		[['disruptive'], 'boring'],
-		[['blockchain'], 'mythical tech'],
-		[['cyber'], 'IT'],
-		[['gartner'], 'generic analyst firm'],
-		[['idc'], 'generic analyst firm'],
-		[['forrester'], 'generic analyst firm'],
-		[['451 research'], 'generic analyst firm'],
+    [['evangelist'], 'mouthpiece'],
+    [['evangelists'], 'mouthpieces'],
+    [['disruptive'], 'boring'],
+    [['blockchain'], 'mythical tech'],
+    [['cyber'], 'IT'],
+    [['gartner'], 'generic analyst firm'],
+    [['idc'], 'generic analyst firm'],
+    [['forrester'], 'generic analyst firm'],
+    [['451 research'], 'generic analyst firm'],
 ];
 
 function makeRegex(sourceWords) {
@@ -34,33 +34,34 @@ function toUpperCase(string) {
 };
 
 function makeRegexToTargetWords(sourceWordsToTargetWords, modifyWords) {
-    return sourceWordsToTargetWords.map(function(sourceAndTarget) {
-        var [source,target] = sourceAndTarget;
+    return sourceWordsToTargetWords.map(function (sourceAndTarget) {
+        let [source, target] = sourceAndTarget;
         source = source.map(modifyWords);
         target = modifyWords(target);
         return [makeRegex(source), target];
     });
 };
 
-var sourceRegexToTargetWords = makeRegexToTargetWords(sourceWordsToTargetWords, identity).concat(makeRegexToTargetWords(sourceWordsToTargetWords, capitalizeFirstLetter)).concat(makeRegexToTargetWords(sourceWordsToTargetWords, toUpperCase));
+const sourceRegexToTargetWords = makeRegexToTargetWords(sourceWordsToTargetWords, identity)
+    .concat(makeRegexToTargetWords(sourceWordsToTargetWords, capitalizeFirstLetter))
+    .concat(makeRegexToTargetWords(sourceWordsToTargetWords, toUpperCase));
 
 function replaceTextWithRegexes(text, sourceRegexToTargetWords) {
-    for (var k = 0; k < sourceRegexToTargetWords.length; k++) {
-        var [regex, targetWord] = sourceRegexToTargetWords[k];
-        var replacedText = text.replace(regex, targetWord);
-        text = replacedText
+    for (let k = 0; k < sourceRegexToTargetWords.length; k++) {
+        let [regex, targetWord] = sourceRegexToTargetWords[k];
+        text = text.replace(regex, targetWord)
     }
     return text;
 };
 
-for (var i = 0; i < elements.length; i++) {
-    var element = elements[i];
+for (let i = 0; i < elements.length; i++) {
+    const element = elements[i];
 
-    for (var j = 0; j < element.childNodes.length; j++) {
-        var node = element.childNodes[j];
+    for (let j = 0; j < element.childNodes.length; j++) {
+        const node = element.childNodes[j];
 
         if (node.nodeType === 3) {
-            var text = node.nodeValue;
+            const text = node.nodeValue;
             replacedText = replaceTextWithRegexes(text, sourceRegexToTargetWords);
 
             if (replacedText !== text) {
