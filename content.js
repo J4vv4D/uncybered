@@ -15,10 +15,9 @@ const sourceWordsToTargetWords = [
     [['disruptive'], 'boring'],
     [['blockchain'], 'mythical tech'],
     [['cyber'], 'IT'],
-    [['gartner'], 'generic analyst firm'],
-    [['idc'], 'generic analyst firm'],
-    [['forrester'], 'generic analyst firm'],
-    [['451 research'], 'generic analyst firm'],
+    [['gartner', 'idc', 'forrester', '451 research'], 'generic analyst firm'],
+    [['bitcoin', 'ethereum', 'litecoin'], 'magic internet money'],
+    [['APT', 'Advanced Persistent Threat'], 'unicorn attack'],
 ];
 
 /**
